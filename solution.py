@@ -101,6 +101,8 @@ def get_route(hostname):
 
 
             #Fill in start
+            ICMP = socket.getprotobyname ("icmp")
+            mySocket = socket.socket(socket.AF_INET, socket.SOCK_RAW,ICMP)
             # Make a raw socket named mySocket
             #Fill in end
 
@@ -133,28 +135,30 @@ def get_route(hostname):
 
             else:
                 #Fill in start
+                icmpHeaderContent = recvPacket[20:28]
+                type, code, checksum, packetID, sequence = struct.unpack("bbHHh", icmpHeaderContent)
                 #Fetch the icmp type from the IP packet
                 #Fill in end
-                try: #try to fetch the hostname
+                #try: #try to fetch the hostname
                     #Fill in start
                     #Fill in end
-                except error: #if the host does not provide a hostname
+                #except: #if the host does not provide a hostname
                     #Fill in start
                     #Fill in end
 
 
                 if types == 11:
                     bytes = struct.calcsize("d")
-                    timeSent = struct.unpack("d", recvPacket[28:28 +
-                    bytes])[0]
+                    timeSent = struct.unpack("d", recvPacket[28:28 + bytes])[0]
                     #Fill in start
+                    return(tracelist1)
                     #You should add your responses to your lists here
                     #Fill in end
                 elif types == 3:
                     bytes = struct.calcsize("d")
                     timeSent = struct.unpack("d", recvPacket[28:28 + bytes])[0]
                     #Fill in start
-                    #You should add your responses to your lists here
+                    return(tracelist2)#You should add your responses to your lists here
                     #Fill in end
                 elif types == 0:
                     bytes = struct.calcsize("d")
@@ -166,6 +170,6 @@ def get_route(hostname):
                     #Fill in start
                     #If there is an exception/error to your if statements, you should append that to your list here
                     #Fill in end
-                break
+                    break
             finally:
                 mySocket.close()
