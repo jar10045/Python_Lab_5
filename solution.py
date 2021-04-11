@@ -44,11 +44,35 @@ def checksum(string):
 
 
 def build_packet():
+    myChecksum = 0
+    # Make a dummy header with a 0 checksum
+    # struct -- Interpret strings as packed binary data
     #Fill in start
     # In the sendOnePing() method of the ICMP Ping exercise ,firstly the header of our
     # packet to be sent was made, secondly the checksum was appended to the header and
     # then finally the complete packet was sent to the destination.
+    header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, myChecksum, ID, 1)
+    data = struct.pack("d", time.time())
+    # Calculate the checksum on the data and the dummy header.
+    myChecksum = checksum(header + data)
 
+    # Get the right checksum, and put in the header
+
+    if sys.platform == 'darwin':
+        # Convert 16-bit integers from host to network  byte order
+        myChecksum = htons(myChecksum) & 0xffff
+    else:
+        myChecksum = htons(myChecksum)
+
+
+    header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, myChecksum, ID, 1)
+    packet = header + data
+
+    mySocket.sendto(packet, (destAddr, 1))  # AF_INET address must be tuple, not str
+
+
+    # Both LISTS and TUPLES consist of a number of objects
+    # which can be referenced by their position number within the object.
 
     # Make the header in a similar way to the ping exercise.
     # Append checksum to the header.
@@ -61,7 +85,7 @@ def build_packet():
     # So the function ending should look like this
 
 
-    packet = header + data
+
     return packet
 
 
@@ -114,7 +138,7 @@ def get_route(hostname):
                 try: #try to fetch the hostname
                     #Fill in start
                     #Fill in end
-                except herror:   #if the host does not provide a hostname
+                except error: #if the host does not provide a hostname
                     #Fill in start
                     #Fill in end
 
