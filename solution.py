@@ -194,7 +194,7 @@ def get_route(hostname):
     finally:
         mySocket.close()
 
-print(" ".join(tracelist1))
-return(tracelist2)
+#print(" ".join(tracelist1))
+#return(tracelist2)
 
-get_route("google.com")
+#get_route("google.com")
