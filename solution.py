@@ -46,6 +46,7 @@ def checksum(string):
 def build_packet():
     #Fill in start
     myChecksum = 0
+    ID = os.getpid() & 0xFFFF
     header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, myChecksum, ID, 1)
     data = struct.pack("d", time.time())
     myChecksum = checksum(header + data)
@@ -84,7 +85,7 @@ def get_route(hostname):
 
             #Fill in start
             # Make a raw socket named mySocket
-            ICMP = SOCK_RAW,("ICMP")
+            ICMP = getprotobyname("icmp")
             mySocket = socket(AF_INET, SOCK_RAW,ICMP)
             #Fill in end
 
@@ -121,7 +122,7 @@ def get_route(hostname):
                 #Fill in start
                 #Fetch the icmp type from the IP packet
                 #Fill in end
-                icmpHeader = recPacket[20:28]
+                icmpHeader = recvPacket[20:28]
                 types, code, mychecksum, packetID, sequence = struct.unpack("bbHHh", icmpHeader)
                 try: #try to fetch the hostname
                     #Fill in start
@@ -139,7 +140,7 @@ def get_route(hostname):
                     bytes = struct.calcsize("d")
                     timeSent = struct.unpack("d", recvPacket[28:28 + bytes])[0]
                     #Fill in start
-                    tracelist1.insert()
+                    tracelist1.insert(-1, str(int((timeReceived - t) * 1000)) + "milliseconds")
                     tracelist2.append(tracelist1)
                     #You should add your responses to your lists here
                     #Fill in end
@@ -148,7 +149,7 @@ def get_route(hostname):
                     timeSent = struct.unpack("d", recvPacket[28:28 + bytes])[0]
                     #Fill in start
                     #You should add your responses to your lists here
-                    tracelist1.insert()
+                    tracelist1.insert(-1, str(int((timeReceived - t) * 1000)) + "milliseconds")
                     tracelist2.append(tracelist1)
 
                     #Fill in end
@@ -157,7 +158,7 @@ def get_route(hostname):
                     timeSent = struct.unpack("d", recvPacket[28:28 + bytes])[0]
                     #Fill in start
                     #You should add your responses to your lists here and return your list if your destination IP is met
-                    tracelist1.insert()
+                    tracelist1.insert(-1, str(int((timeReceived - t) * 1000)) + "milliseconds")
                     tracelist2.append(tracelist1)
                     #Fill in end
                 else:
