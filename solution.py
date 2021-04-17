@@ -80,7 +80,7 @@ def get_route(hostname):
 
     for ttl in range(1,MAX_HOPS):
         for tries in range(TRIES):
-            destAddr = gethostname()
+            destAddr = gethostbyname(hostname)
 
 
             #Fill in start
@@ -126,13 +126,13 @@ def get_route(hostname):
                 types, code, mychecksum, packetID, sequence = struct.unpack("bbHHh", icmpHeader)
                 try: #try to fetch the hostname
                     #Fill in start
-                    tracelist1.append(destAddr)
-                    tracelist2.append(tracelist1)
+                    tracelist1.append(gethostbyaddr(str(addr[0]))[0])
+
                     #Fill in end
                 except herror:   #if the host does not provide a hostname
                     #Fill in start
                     tracelist1.append("hostname not provided by host")
-                    tracelist2.append(tracelist1)
+
                     #Fill in end
 
 
