@@ -104,7 +104,7 @@ def get_route(hostname):
 
 
             #Fill in start
-            ICMP = socket.SOCK_RAW,("ICMP")
+            ICMP = SOCK_RAW,("ICMP")
             mySocket = socket.socket(socket.AF_INET, SOCK_RAW,ICMP)
             # Make a raw socket named mySocket
             #Fill in end
