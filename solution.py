@@ -126,7 +126,7 @@ def get_route(hostname):
                 types, code, mychecksum, packetID, sequence = struct.unpack("bbHHh", icmpHeader)
                 try: #try to fetch the hostname
                     #Fill in start
-                    tracelist1.append(gethostbyaddr)
+                    tracelist1.append(destAddr)
                     tracelist2.append(tracelist1)
                     #Fill in end
                 except herror:   #if the host does not provide a hostname
