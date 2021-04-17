@@ -47,13 +47,15 @@ def checksum(string):
 def build_packet():
     myChecksum = 0
     # Make a dummy header with a 0 checksum
+    header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, myChecksum, ID, 1)
     # struct -- Interpret strings as packed binary data
+    data = struct.pack("d", time.time())
     #Fill in start
     # In the sendOnePing() method of the ICMP Ping exercise ,firstly the header of our
     # packet to be sent was made, secondly the checksum was appended to the header and
     # then finally the complete packet was sent to the destination.
-    header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, myChecksum, ID, 1)
-    data = struct.pack("d", time.time())
+
+
     # Calculate the checksum on the data and the dummy header.
     myChecksum = checksum(header + data)
 
@@ -81,13 +83,13 @@ def build_packet():
 
     # Don’t send the packet yet , just return the final packet in this function.
     #Fill in end
-
+    return packet
 
     # So the function ending should look like this
 
 
 
-    return packet
+
 
 
 def get_route(hostname):
@@ -136,41 +138,53 @@ def get_route(hostname):
 
             else:
                 #Fill in start
-                icmpHeaderContent = recvPacket[20:28]
-                type, code, checksum, packetID, sequence = struct.unpack("bbHHh", icmpHeaderContent)
+
                 #Fetch the icmp type from the IP packet
                 #Fill in end
-                #try: #try to fetch the hostname
+                icmpHeader = recPacket[20:28]
+                icmpType, code, mychecksum, packetID, sequence = struct.unpack("bbHHh", icmpHeader)
+                if icmpType != 8 and packetID == ID:
+                    bytesInDouble = struct.calcsize("d")
+                    timeSent = struct.unpack("d", recPacket[28:28 + bytesInDouble])[0]
+            return timeReceived - timeSent
+        # Fill in end
+        timeLeft = timeLeft - howLongInSelect
+        if timeLeft <= 0:
+            return "Request timed out."
+
+        try: #try to fetch the hostname
                     #Fill in start
+            dest = gethostbyname(host)
                     #Fill in end
-                #except: #if the host does not provide a hostname
+        except: #if the host does not provide a hostname
                     #Fill in start
+            unknown = []
                     #Fill in end
 
 
-                if types == 11:
+        if types == 11:
                     bytes = struct.calcsize("d")
                     timeSent = struct.unpack("d", recvPacket[28:28 + bytes])[0]
                     #Fill in start
                     return(tracelist1)
                     #You should add your responses to your lists here
                     #Fill in end
-                elif types == 3:
+        elif types == 3:
                     bytes = struct.calcsize("d")
                     timeSent = struct.unpack("d", recvPacket[28:28 + bytes])[0]
                     #Fill in start
                     return(tracelist2)#You should add your responses to your lists here
                     #Fill in end
-                elif types == 0:
+        elif types == 0:
                     bytes = struct.calcsize("d")
                     timeSent = struct.unpack("d", recvPacket[28:28 + bytes])[0]
                     #Fill in start
                     #You should add your responses to your lists here and return your list if your destination IP is met
                     #Fill in end
-                else:
+        else:
                     #Fill in start
                     #If there is an exception/error to your if statements, you should append that to your list here
                     #Fill in end
                     break
-            finally:
-                mySocket.close()
+        #finally
+        mySocket.close()
