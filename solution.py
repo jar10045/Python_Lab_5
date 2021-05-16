@@ -26,13 +26,13 @@ def checksum(string):
     while count < countTo:
         thisVal = (string[count + 1]) * 256 + (string[count])
         csum += thisVal
-        csum &= 0xffffffff
+        csum &= 0xffff
         count += 2
 
 
     if countTo < len(string):
         csum += (string[len(string) - 1])
-        csum &= 0xffffffff
+        csum &= 0xffff
 
 
     csum = (csum >> 16) + (csum & 0xffff)
@@ -46,7 +46,7 @@ def checksum(string):
 def build_packet():
     #Fill in start
     myChecksum = 0
-    ID = os.getpid() & 0xFFFF
+    ID = os.getpid() & 0xffff
     header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, myChecksum, ID, 1)
     data = struct.pack("d", time.time())
     myChecksum = checksum(header + data)
