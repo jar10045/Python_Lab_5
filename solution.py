@@ -1,3 +1,4 @@
+
 from socket import *
 import os
 import sys
@@ -26,13 +27,13 @@ def checksum(string):
     while count < countTo:
         thisVal = (string[count + 1]) * 256 + (string[count])
         csum += thisVal
-        csum &= 0xffff
+        csum &= 0xffffffff
         count += 2
 
 
     if countTo < len(string):
         csum += (string[len(string) - 1])
-        csum &= 0xffff
+        csum &= 0xffffffff
 
 
     csum = (csum >> 16) + (csum & 0xffff)
@@ -46,7 +47,7 @@ def checksum(string):
 def build_packet():
     #Fill in start
     myChecksum = 0
-    ID = os.getpid() & 0xffff
+    ID = os.getpid() & 0xFFFF
     header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, myChecksum, ID, 1)
     data = struct.pack("d", time.time())
     myChecksum = checksum(header + data)
@@ -85,12 +86,13 @@ def get_route(hostname):
 
             #Fill in start
             # Make a raw socket named mySocket
-            ICMP = getprotobyname("icmp")
-            mySocket = socket(AF_INET, SOCK_RAW,ICMP)
+            ICMP = socket.getprotobyname("icmp")
+            mySocket = socket.socket(AF_INET, socket.SOCK_RAW,ICMP)
+
             #Fill in end
 
 
-            mySocket.setsockopt(IPPROTO_IP, IP_TTL, struct.pack('I', ttl))
+            mySocket.setsockopt(IPPROTO_IP, socket.IP_TTL, struct.pack('I', ttl))
             mySocket.settimeout(TIMEOUT)
             try:
                 d = build_packet()
