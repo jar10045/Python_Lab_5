@@ -87,7 +87,7 @@ def get_route(hostname):
             #Fill in start
             # Make a raw socket named mySocket
             ICMP = socket.getprotobyname("icmp")
-            mySocket = socket.socket(AF_INET, socket.SOCK_RAW,ICMP)
+            mySocket = socket.socket(socket.AF_INET, socket.SOCK_RAW,ICMP)
 
             #Fill in end
 
@@ -176,3 +176,4 @@ def get_route(hostname):
             finally:
                 mySocket.close()
     return(tracelist2)
+get_route(www.google.com)
